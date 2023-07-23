@@ -1,5 +1,5 @@
 import { Logger, MessageEvent } from '@nestjs/common';
-import { BehaviorSubject, Subject, finalize } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export class SseService {
   private subjects: Map<string, Subject<MessageEvent>> = new Map();

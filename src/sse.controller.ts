@@ -1,18 +1,39 @@
-import { Controller, MessageEvent, Param, Post, Sse } from '@nestjs/common';
-import { Observable, Subject, interval, map } from 'rxjs';
+import {
+  Controller,
+  Inject,
+  Logger,
+  MessageEvent,
+  Param,
+  Post,
+  Sse,
+} from '@nestjs/common';
+import { Subject } from 'rxjs';
 import { SseService } from './sse.service';
+import { CACHE } from './cache.module';
+import { Cache } from 'cache-manager';
 
 @Controller()
 export class SseController {
-  constructor(private readonly service: SseService) {}
+  constructor(
+    private readonly service: SseService,
+    @Inject(CACHE) private readonly cache: Cache,
+  ) {}
 
   @Sse('updates/:clientId')
   updates(@Param('clientId') clientId: string): Subject<MessageEvent> {
+    Logger.debug(
+      `Setting PID=${process.pid} as SSE handler for client ${clientId}`,
+    );
+    this.cache.set(clientId, process.pid);
     return this.service.getSubjectForClient(clientId);
   }
 
   @Post('updates/:clientId')
-  sendUpdate(@Param('clientId') clientId: string) {
+  async sendUpdate(@Param('clientId') clientId: string) {
+    const handlerPid = await this.cache.get(clientId);
+    Logger.debug(
+      `Handler PID for client ${clientId} is ${handlerPid}, current PID=${process.pid}`,
+    );
     this.service
       .getSubjectForClient(clientId)
       .next({ data: { update: 'yes' } });
