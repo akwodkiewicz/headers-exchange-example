@@ -1,6 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { AmqpService } from './ampq.service';
 import { AMQPChannel } from '@cloudamqp/amqp-client';
+import { SseService } from './sse.service';
 
 @Injectable()
 export class SseUpdatesConsumerService implements OnModuleInit {
@@ -8,7 +9,10 @@ export class SseUpdatesConsumerService implements OnModuleInit {
   private queueName = `${process.pid}`;
 
   private channel: undefined | AMQPChannel;
-  constructor(private readonly amqpService: AmqpService) {}
+  constructor(
+    private readonly amqpService: AmqpService,
+    private readonly sseService: SseService,
+  ) {}
 
   async onModuleInit() {
     await this.setupChannel();
@@ -32,11 +36,15 @@ export class SseUpdatesConsumerService implements OnModuleInit {
   }
   private async setupConsumer() {
     await this.channel.basicConsume(this.queueName, {}, (message) => {
+      const body = JSON.parse(message.bodyToString());
       Logger.debug(
         `Received message! Headers: ${JSON.stringify(
           message.properties.headers,
         )}, body: ${message.bodyToString()}`,
       );
+      this.sseService
+        .getSubjectForClient(body.clientId)
+        .next({ data: body.someData.toString() });
     });
   }
 }
