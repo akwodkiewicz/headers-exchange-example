@@ -13,7 +13,7 @@ export class SseUpdatesPublisherController {
 
   @Post(':clientId')
   async sendUpdate(@Param('clientId') clientId: string) {
-    const handlerPids = (await this.cache.get(clientId)) as
+    const handlerPids = (await this.cache.get('client_' + clientId)) as
       | number[]
       | undefined;
     if (!handlerPids) return;
