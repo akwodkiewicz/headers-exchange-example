@@ -11,11 +11,13 @@ import { Subject } from 'rxjs';
 import { SseService } from './sse.service';
 import { CACHE } from './cache.module';
 import { Cache } from 'cache-manager';
+import { SseUpdatesPublisherService } from './sse-updates-publisher.service';
 
 @Controller()
 export class SseController {
   constructor(
     private readonly service: SseService,
+    private readonly publisher: SseUpdatesPublisherService,
     @Inject(CACHE) private readonly cache: Cache,
   ) {}
 
@@ -34,8 +36,6 @@ export class SseController {
     Logger.debug(
       `Handler PID for client ${clientId} is ${handlerPid}, current PID=${process.pid}`,
     );
-    this.service
-      .getSubjectForClient(clientId)
-      .next({ data: { update: 'yes' } });
+    this.publisher.publish({ data: 'update' }, handlerPid as number);
   }
 }

@@ -5,3 +5,11 @@ services:
       - 6969:6379
     volumes:
       - ./.docker-volumes/redis:/data
+
+  message_broker:
+    image: rabbitmq:3.12-management-alpine
+    ports:
+      - 5420:5672
+      - 15420:15672
+    volumes:
+      - ./.docker-volumes/rabbitmq:/var/lib/rabbitmq

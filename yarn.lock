@@ -494,6 +494,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cloudamqp/amqp-client@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "@cloudamqp/amqp-client@npm:2.1.1"
+  checksum: c68cd459536dc8d9cb859da2fb0493e81ea2d482dcd68d3d0ef106cfb98817f1e361efc80b165b22f9b6060a61f4b33f36a9556616389f24e74abc1e8994ba8f
+  languageName: node
+  linkType: hard
+
 "@colors/colors@npm:1.5.0":
   version: 1.5.0
   resolution: "@colors/colors@npm:1.5.0"
@@ -4728,6 +4735,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "header-exchange-example@workspace:."
   dependencies:
+    "@cloudamqp/amqp-client": ^2.1.1
     "@nestjs/cli": ^10.0.0
     "@nestjs/common": ^10.0.0
     "@nestjs/core": ^10.0.0
