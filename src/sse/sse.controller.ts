@@ -19,11 +19,19 @@ export class SseController {
   ) {}
 
   @Sse(':clientId')
-  updates(@Param('clientId') clientId: string): Subject<MessageEvent> {
-    Logger.debug(
-      `Setting PID=${process.pid} as SSE handler for client ${clientId}`,
+  async updates(
+    @Param('clientId') clientId: string,
+  ): Promise<Subject<MessageEvent>> {
+    const existingValue = await this.cache.get(clientId);
+    Logger.log(
+      `Client ${clientId} currently handled by PID=${existingValue}.` +
+        `Adding ${process.pid} to set of handlers`,
     );
-    this.cache.set(clientId, process.pid);
+    this.cache.set(
+      clientId,
+      ((existingValue as number[]) ?? []).concat(process.pid),
+    );
+
     return this.service.getSubjectForClient(clientId);
   }
 }

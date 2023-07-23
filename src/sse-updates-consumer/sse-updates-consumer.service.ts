@@ -31,7 +31,7 @@ export class SseUpdatesConsumerService implements OnModuleInit {
     await this.channel.queueDeclare(this.queueName, { exclusive: true });
     await this.channel.queueBind(this.queueName, this.exchangeName, '', {
       'x-match': 'all',
-      pid: process.pid,
+      [`${process.pid}`]: 'true',
     });
   }
   private async setupConsumer() {

@@ -13,14 +13,12 @@ export class SseUpdatesPublisherController {
 
   @Post(':clientId')
   async sendUpdate(@Param('clientId') clientId: string) {
-    const handlerPid = await this.cache.get(clientId);
-    Logger.debug(
-      `Handler PID for client ${clientId} is ${handlerPid}, current PID=${process.pid}`,
-    );
+    const handlerPids = (await this.cache.get(clientId)) as
+      | number[]
+      | undefined;
+    if (!handlerPids) return;
+    Logger.debug(`Handler PIDs for client ${clientId} are ${handlerPids}`);
     Logger.log('Publishing message');
-    this.publisher.publish(
-      { clientId, someData: Math.random() },
-      handlerPid as number,
-    );
+    this.publisher.publish({ clientId, someData: Math.random() }, handlerPids);
   }
 }

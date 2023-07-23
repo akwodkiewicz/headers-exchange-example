@@ -14,13 +14,16 @@ export class SseUpdatesPublisherService implements OnModuleInit {
     await this.setupExchange();
   }
 
-  public async publish(data: Record<string, unknown>, forPid: number) {
+  public async publish(data: Record<string, unknown>, forPid: number[]) {
     await this.channel.basicPublish(
       this.exchangeName,
       '',
       JSON.stringify(data),
       {
-        headers: { pid: forPid },
+        headers: forPid.reduce((acc, cur) => {
+          acc[cur] = 'true';
+          return acc;
+        }, {}),
       },
     );
   }
