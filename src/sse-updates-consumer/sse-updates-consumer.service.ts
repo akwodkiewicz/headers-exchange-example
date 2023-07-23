@@ -35,16 +35,16 @@ export class SseUpdatesConsumerService implements OnModuleInit {
     });
   }
   private async setupConsumer() {
-    await this.channel.basicConsume(this.queueName, {}, (message) => {
+    await this.channel.basicConsume(this.queueName, {}, async (message) => {
       const body = JSON.parse(message.bodyToString());
       Logger.debug(
         `Received message! Headers: ${JSON.stringify(
           message.properties.headers,
         )}, body: ${message.bodyToString()}`,
       );
-      this.sseService
-        .getSubjectForClient(body.clientId)
-        .next({ data: body.someData.toString() });
+      (await this.sseService.getSubjectForClient(body.clientId)).next({
+        data: body.someData.toString(),
+      });
     });
   }
 }

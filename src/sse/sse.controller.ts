@@ -29,7 +29,9 @@ export class SseController {
     );
     this.cache.set(
       clientId,
-      ((existingValue as number[]) ?? []).concat(process.pid),
+      ((existingValue as number[]) ?? [])
+        .filter((v) => v !== process.pid)
+        .concat(process.pid),
     );
 
     return this.service.getSubjectForClient(clientId);
