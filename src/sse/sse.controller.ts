@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Subject } from 'rxjs';
 import { SseService } from './sse.service';
-import { CACHE } from './cache.module';
+import { CACHE } from '../cache/cache.module';
 import { Cache } from 'cache-manager';
 
 @Controller('updates')

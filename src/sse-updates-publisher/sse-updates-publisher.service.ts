@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { AmqpService } from './ampq.service';
+import { AmqpService } from '../amqp/ampq.service';
 import { AMQPChannel } from '@cloudamqp/amqp-client';
 
 @Injectable()

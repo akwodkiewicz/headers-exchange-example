@@ -1,7 +1,7 @@
 import { Controller, Inject, Logger, Param, Post } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 
-import { CACHE } from './cache.module';
+import { CACHE } from '../cache/cache.module';
 import { SseUpdatesPublisherService } from './sse-updates-publisher.service';
 
 @Controller('updates')

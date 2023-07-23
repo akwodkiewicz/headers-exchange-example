@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { AmqpService } from './ampq.service';
+import { AmqpService } from '../amqp/ampq.service';
 import { AMQPChannel } from '@cloudamqp/amqp-client';
-import { SseService } from './sse.service';
+import { SseService } from '../sse/sse.service';
 
 @Injectable()
 export class SseUpdatesConsumerService implements OnModuleInit {
